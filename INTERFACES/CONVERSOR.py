@@ -12,10 +12,11 @@ class Conversor:
         self.pies = StringVar()
         self.metros = StringVar()
 
-        mainFrame = ttk.Frame(raiz)
+        #Padding(izquierda, arriba, derecha, abajo)
+        mainFrame = ttk.Frame(raiz, padding="3 3 12 12")
         mainFrame.grid(column = 0, row = 0 )
 
-        piesEntry = ttk.Entry(mainFrame, textvariable= self.pies)
+        piesEntry = ttk.Entry(mainFrame,width=7, textvariable= self.pies)
         piesEntry.grid(column=1,row=0)
 
         ttk.Label(mainFrame, text="Pies").grid(column=2, row=0)
@@ -24,7 +25,8 @@ class Conversor:
         ttk.Label(mainFrame, text="Metros").grid(column=2, row=1)
 
         ttk.Button(mainFrame, text="Calcular", command=self.calcular).grid(column=2, row=2)
-
+        
+        piesEntry.focus()
         #Hacer operacion precionando Enter 
         raiz.bind("<Return>", self.calcular)
 
@@ -33,11 +35,14 @@ class Conversor:
         print("Boton Precionado")
         piesUsuario = self.pies.get() #Siempre devuelve una cadena
         print("Pies ingresados: ", piesUsuario)
-        piesFlotante = float(piesUsuario) #Conversion de cadena a flotante 
-        metros = piesFlotante * 0.3048
-        print("Metros: ", metros)
-        self.metros.set(metros)
-        
+        try:
+           piesFlotante = float(piesUsuario) #Conversion de cadena a flotante 
+           metros = piesFlotante * 0.3048
+           print("Metros: ", metros)
+           self.metros.set(metros)
+        except ValueError:
+            print("NO ES UN DATO VALIDO")
+            self.pies.set("")
 
 
 if __name__=="__main__":
