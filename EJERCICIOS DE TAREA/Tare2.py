@@ -95,12 +95,12 @@ tabla.heading("4", text="UNITE_PRICE", anchor=CENTER)
 
 
 
-tabla.insert("", END, text="1", values=("Condia", "lait", "24", "$100.0"))
-tabla.insert("", END, text="2", values=("la vache quirit", "fromage", "200", "$300.0"))
-tabla.insert("", END, text="3", values=("hamoud boualam", "boisson gaseuse", "98", "$90.0"))
-tabla.insert("", END, text="4", values=("Mina", "chocolat", "80", "$50.0"))
-tabla.insert("", END, text="5", values=("Aroma", "cafe", "60", "$80.0"))
-tabla.insert("", END, text="6", values=("Facto", "facto", "7000", "$600.0"))
+tabla.insert("", END, text="1", values=("CONDIA", "LAIT", "24", "$100.0"))
+tabla.insert("", END, text="2", values=("LA VACHE QUIRIT", "FROMAGE", "200", "$300.0"))
+tabla.insert("", END, text="3", values=("HAMOUD BOUALAM", "BOISSON GASEUSE", "98", "$90.0"))
+tabla.insert("", END, text="4", values=("MINA", "CHOCOLAT", "80", "$50.0"))
+tabla.insert("", END, text="5", values=("AROMA", "CAFE", "60", "$80.0"))
+tabla.insert("", END, text="6", values=("FACTO", "FACTO", "7000", "$600.0"))
 
 
 tabla.pack() 
