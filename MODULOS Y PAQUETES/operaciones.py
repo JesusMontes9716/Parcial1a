@@ -1,7 +1,5 @@
 class calcBasica:
 
-
-
     def resta(*nums): 
         res = 0
         for valor in nums:
@@ -30,3 +28,6 @@ class calcBasica:
             res *= valor
 
         return res
+
+
+
