@@ -1,139 +1,317 @@
-import openpyxl as xl
-from openpyxl import *
-
-from tkinter import messagebox
-from tkinter import*
+from tkinter import *
 from tkinter import ttk
+import os
 
-wb = load_workbook('formulario.xlsx')
-sheet = wb.active
+#Objeto persona
+class Persona:
+    def __init__(self, nombre: str, a_paterno: str, a_materno: str, correo: str, movil: str, ocupacion: str, aficionLeer: bool, aficionMusica: bool, aficionVideojuegos: bool, estado: str):
+        self.nombre= nombre
+        self.a_paterno= a_paterno
+        self.a_materno= a_materno
+        self.correo= correo
+        self.movil= movil
+        self.ocupacion= ocupacion
+        self.aficionLeer= aficionLeer
+        self.aficionMusica= aficionMusica
+        self.aficionVideojuegos= aficionVideojuegos
+        self.estado = estado
 
-def excel():
-     
-    # resize the width of columns in
-    # excel spreadsheet
-    sheet.column_dimensions['A'].width = 30
-    sheet.column_dimensions['B'].width = 10
-    sheet.column_dimensions['C'].width = 10
-    sheet.column_dimensions['D'].width = 20
-    sheet.column_dimensions['E'].width = 20
-    sheet.column_dimensions['F'].width = 40
-    sheet.column_dimensions['G'].width = 50
-    sheet.column_dimensions['H'].width = 50
 
-    # write given data to an excel spreadsheet
-    # at particular location
-    sheet.cell(row=1, column=1).value = "NOMBRE"
-    sheet.cell(row=1, column=2).value = "AP. PATERNO"
-    sheet.cell(row=1, column=3).value = "AP. MATERNO"
-    sheet.cell(row=1, column=4).value = "CORREO"
-    sheet.cell(row=1, column=5).value = "MOVIL"
-    sheet.cell(row=1, column=6).value = "AFICIONES"
-    sheet.cell(row=1, column=7).value = "ESTADO"
-    sheet.cell(row=1, column=8).value = "ESTATUS"
+    def _iter_(self):
+        yield self.nombre
+        yield self.a_paterno
 
-def insert():
-     
-    # if user not fill any entry
-    # then print "empty input"
-    if (nombreEntry.get() == "" and
-        aPaternoEntry.get() == "" and
-        aMaternoEntry.get() == "" and
-        correoEntry.get() == "" and
-        movilEntry.get() == "" 
-        ):
-             
-        print("empty input")
- 
-    else:
- 
-        # assigning the max row and max column
-        # value upto which data is written
-        # in an excel sheet to the variable
-        current_row = sheet.max_row
-        current_column = sheet.max_column
- 
-        # get method returns current text
-        # as string which we write into
-        # excel spreadsheet at particular location
-        sheet.cell(row=current_row + 1, column=1).value = nombreEntry.get()
-        sheet.cell(row=current_row + 1, column=2).value = aPaternoEntry.get()
-        sheet.cell(row=current_row + 1, column=3).value = aMaternoEntry.get()
-        sheet.cell(row=current_row + 1, column=4).value = correoEntry.get()
-        sheet.cell(row=current_row + 1, column=5).value = movilEntry.get()
-        
- 
-        # save the file
-        wb.save('formulario.xlsx')
- 
-        # set focus on the name_field box
-        nombreEntry.focus_set()
- 
-        
- 
- 
-raiz = Tk()
+
+
+if not os.path.isfile("Datos.csv"):
+    with open("Datos.csv", 'w') as file:
+        file.write("Nombre, ApellidoPaterno, Apellidomaterno, Correo, Movil, Ocupacion, Aficiones, Leer, Musica, Videojuegos, Estado\n")
+else:
+    pass
+
+
+
+def mostrar_personas(lista_personas):
+    for persona in lista_personas:
+        print("Nombre: ", persona.nombre)
+        print("Apellido paterno: ", persona.a_paterno)
+        print("Apellido materno: ", persona.a_materno)
+        print("Correo: ", persona.correo)
+        print("Movil: ", persona.movil)
+        print("Ocupacion: ", persona.ocupacion)
+        print("Aficiones: ")
+        print("- Leer: ", persona.aficionLeer)
+        print("- Musica: ", persona.aficionMusica)
+        print("- Videojuegos: ", persona.aficionVideojuegos)
+        print("Estado: ", persona.estado)   
+    
+
+
+    # Limpiar los campos de entrada después de guardar los datos
+    nombre.delete(0, END)
+    aPaterno.delete(0, END)
+    aMaterno.delete(0, END)
+    correo.delete(0, END)
+    movil.delete(0, END)
+    ocupacion.set(None)
+    aficionLeer.set(False)
+    aficionMusica.set(False)
+    aficionVideojuegos.set(False)
+
+
+# Crear ventana principal
+root = Tk()
+
+# Crear una lista vacía para almacenar las personas
+personas = []
+
+# Crear un notebook (panel tabulado)
+notebook = ttk.Notebook(root)
+notebook.configure(width=400, height=500)
+
+# Crear pestañas dentro del notebook
+tab1 = ttk.Frame(notebook)
+
+tab3 = ttk.Frame(notebook)
+
+
+
+file= open("Datos.csv", "r")
+    
+#Titulo    
+line = file.readline()
+#Segunda linea
+line = file.readline()
+personas = []
+
+while line:
+
+    
+    # Dividir la línea en diferentes partes utilizando una coma como separador
+    itemProducto = line.strip().split(",")
+
+    # Crear un objeto de la clase Productos con los valores obtenidos de la línea
+    persona = Persona(itemProducto[0], itemProducto[1], itemProducto[2], itemProducto[3], itemProducto[4], itemProducto[5], itemProducto[6], itemProducto[7], itemProducto[8], itemProducto[9])
+
+    # Agregar el objeto a la lista de personas
+    personas.append(persona)
+
+    # Leer la siguiente línea
+    line = file.readline()
+
+    for i, persona in enumerate(personas):
+        table = ttk.Treeview(tab3, columns=("nombre", "a_paterno", "a_materno", "correo", "movil", "ocupacion", "aficionLeer", "aficionMusica", "aficionVideojuegos", "estado"))
+
+        # Definir encabezados de columna
+        table.heading("#0", text="ID")
+        table.heading("nombre", text="Nombre")
+        table.heading("a_paterno", text="Apellido paterno")
+        table.heading("a_materno", text="Apellido materno")
+        table.heading("correo", text="Correo")
+        table.heading("movil", text="Móvil")
+        table.heading("ocupacion", text="Ocupación")
+        table.heading("aficionLeer", text="Lee")
+        table.heading("aficionMusica", text="Escucha música")
+        table.heading("aficionVideojuegos", text="Juega videojuegos")
+        table.heading("estado", text="Estado")
+
+        # Definir anchos de columna
+        table.column("#0", width=50)
+        table.column("nombre", width=100)
+        table.column("a_paterno", width=120)
+        table.column("a_materno", width=120)
+        table.column("correo", width=200)
+        table.column("movil", width=100)
+        table.column("ocupacion", width=120)
+        table.column("aficionLeer", width=100)
+        table.column("aficionMusica", width=120)
+        table.column("aficionVideojuegos", width=120)
+        table.column("estado", width=120)
+            
+            
+        table.insert(parent="", index=i, iid=i, text=i+1, values=(itemProducto[0], itemProducto[1], itemProducto[2], itemProducto[3], itemProducto[4], itemProducto[5], itemProducto[6], itemProducto[7], itemProducto[8], itemProducto[9]))
+file.close()
+
+def guardar():
+    # Crear objeto persona con los datos ingresados por el usuario
+    persona = Persona(nombre.get(), aPaterno.get(), aMaterno.get(), correo.get(), movil.get(), ocupacion.get(), aficionLeer.get(), aficionMusica.get(), aficionVideojuegos.get(), estado.get())
+    # Agregar el objeto a la lista de productos
+    personas.append(persona)
+    # Guardar datos en un archivo de texto
+    with open("Datos.csv", "a") as file:
+
+        if persona.aficionLeer == True:
+            leer="Si_lee"
+        else:
+            leer="No_lee"
+
+        if persona.aficionMusica == True:
+            musica="Escucha_Musica"
+        else:
+            musica="No_Escucha_Musica"
+
+        if persona.aficionVideojuegos == True:
+            videojuegos="Juega_Videojuegos"
+        else:
+            videojuegos="No_ Juega_Videojuegos"
+            
+        file.write(f"{persona.nombre}, {persona.a_paterno}, {persona.a_materno}, {persona.correo}, {persona.movil}, {persona.ocupacion}, {leer}, {musica}, {videojuegos}, {persona.estado}\n")
+        table.insert(parent="", index="end", iid=len(personas), text=len(personas), values=(persona.nombre, persona.a_paterno, persona.a_materno, persona.correo, persona.movil, persona.ocupacion, leer, musica, videojuegos, persona.estado))
+    
+    nombre.delete(0, END)
+    aPaterno.delete(0, END)
+    aMaterno.delete(0, END)
+    correo.delete(0, END)
+    movil.delete(0, END)
+    ocupacion.set(None)
+    aficionLeer.set(False)
+    aficionMusica.set(False)
+    aficionVideojuegos.set(False)    
+
+
+# Modificar el estilo por defecto de las etiquetas
+style = ttk.Style()
+style.configure('TLabel', font=('Arial', 14))
+
+
+# Agregar las pestañas al notebook
+notebook.add(tab1, text="     Add    ")
+notebook.add(tab3, text="     Tabla    ")
+
+
+# Crear un estilo personalizado para las pestañas
+style.theme_create("MyStyle", parent="alt", settings={
+    "TNotebook.Tab": {
+        "configure": {"background": "skyblue1", "foreground": "black", "font": ("Arial", 14)},
+        "map": {"background": [("selected", "Dodgerblue2")], "foreground": [("selected", "white")]}
+    }
+})
+style.theme_use("MyStyle")
+
+# Mostrar el notebook
+notebook.pack(expand=True, fill=BOTH)
+
+#Frame 1 (0,0)
+
+BaseFrame = ttk.Frame(tab1, padding="5 30 5 5")
+BaseFrame.grid(column=0, row= 0)
+
+# Crear frame principal
+main_frame = ttk.Frame(BaseFrame, width=200, height=200)
+main_frame.pack()
+
+# Crear frame secundario
+sub_frame = ttk.Frame(main_frame, width=300, height=300,padding="30 30 30 30",relief="raised")
+sub_frame.pack()
+sub_frame.grid(column=0,row=0,pady=25)
+
+ttk.Label(sub_frame, text="Nombre:").grid(column = 0, row=0, pady= 12)
+nombre = ttk.Entry(sub_frame, width=20)
+nombre.grid(column=1,row=0)
+
+ttk.Label(sub_frame, text="A. Paterno:").grid(column = 0, row=1, pady= 12)
+aPaterno = ttk.Entry(sub_frame, width=20)
+aPaterno.grid(column=1,row=1)
+
+ttk.Label(sub_frame, text="A. Materno:").grid(column = 0, row=2, pady= 12)
+aMaterno = ttk.Entry(sub_frame, width=20)
+aMaterno.grid(column=1,row=2)
+
+ttk.Label(sub_frame, text="Correo").grid(column = 0, row=3, pady= 12)
+correo = ttk.Entry(sub_frame, width=20)
+correo.grid(column=1,row=3)
+
+ttk.Label(sub_frame, text="Movil").grid(column = 0, row=4, pady= 12)
+movil = ttk.Entry(sub_frame, width=20)
+movil.grid(column=1,row=4)
+
+#
+
+sub_frame2 = ttk.Frame(main_frame, width=300, height=300,padding="10 30 10 30")
+sub_frame2.grid(column=1,row=0)
+
+ocupacion= StringVar()
+
+Estudiante_rb= ttk.Radiobutton(sub_frame2,text="Estudiante", variable=ocupacion, value="Estudiante").grid(column = 0, row=0, sticky=(W))
+Empleado_rb= ttk.Radiobutton(sub_frame2,text="Empleado", variable=ocupacion, value="Empleado").grid(column = 0, row=1, sticky=(W))
+Desempleado_rb= ttk.Radiobutton(sub_frame2,text="Desempleado", variable=ocupacion, value="Desempleado").grid(column = 0, row=2, sticky=(E))
+
+
+
+sub_frame3 = ttk.Frame(main_frame, width=300, height=300,padding="30 10 30 10",relief="raised")
+sub_frame3.grid(column=0,row=1)
+
+
+ttk.Label(sub_frame3, text="Aficiones:").grid(column = 0, row=0, pady= 12)
+
+
+aficionLeer= BooleanVar()
+Leer_cb= ttk.Checkbutton(sub_frame3,text="Leer", variable=aficionLeer).grid(column = 0, row=1)
+
+aficionMusica= BooleanVar()
+Musica_cb= ttk.Checkbutton(sub_frame3,text="Musica", variable=aficionMusica).grid(column = 1, row=1)
+
+aficionVideojuegos= BooleanVar()
+Videojuegos_cb= ttk.Checkbutton(sub_frame3,text="Videojuegos", variable=aficionVideojuegos).grid(column = 2, row=1)
+
+
+#
+
+sub_frame4 = ttk.Frame(main_frame, width=200, height=300,padding="10 10 10 10")
+sub_frame4.grid(column=1,row=1)
 
 estado = StringVar()
-mainFrame = ttk.Frame(raiz, padding="10 10 10 10")#izquierda arriba derecha abajo
-mainFrame.grid(column=0, row=0)
-
-frame1 = ttk.Frame(mainFrame, padding="10 10 10 10", borderwidth=3, relief="raised")
-frame1.grid(column=0, row=0)
-
-frame2 = ttk.Frame(mainFrame, padding="10 10 10 10", borderwidth=3, relief="raised")
-frame2.grid(column=0, row=1)
-frame3 = ttk.Frame(mainFrame, padding="10 10 10 10")
-frame3.grid(column=1, row=0)
-        
-nombreEntry = ttk.Entry(frame1, width=30)
-nombreEntry.grid(column=1, row=0, pady=12, sticky=(W, E))
-
-aPaternoEntry = ttk.Entry(frame1, width=30)
-aPaternoEntry.grid(column=1, row=2, pady=12, sticky=(W, E))
-
-aMaternoEntry = ttk.Entry(frame1, width=30)
-aMaternoEntry.grid(column=1, row=3, pady=12, sticky=(W, E))
-
-correoEntry = ttk.Entry(frame1, width=30)
-correoEntry.grid(column=1, row=4, pady=12, sticky=(W, E))
-
-movilEntry = ttk.Entry(frame1, width=30)
-movilEntry.grid(column=1, row=5, pady=12, sticky=(W, E))
-        
-ttk.Label(frame1, text="NOMBRE:  ").grid(column=0, row=0, pady=12, sticky=(E))
-ttk.Label(frame1, text="AP. PATERNO:  ").grid(column=0, row=2, pady=12, sticky=(E))
-ttk.Label(frame1, text="AP. MATERNO:  ").grid(column=0, row=3, pady=12, sticky=(E))
-ttk.Label(frame1, text="CORREO:  ").grid(column=0, row=4, pady=12, sticky=(E))
-ttk.Label(frame1, text="MOVIL:  ").grid(column=0, row=5, pady=12, sticky=(E))
-
-ttk.Label(frame2, text="Aficiones:  ").grid(column=0, row=0, pady=12, sticky=(E))
-leer = ttk.Checkbutton(frame2, text='LEER')
-leer.grid(column=0, row=1, sticky=(W))
-musica = ttk.Checkbutton(frame2, text='MUSICA')
-musica.grid(column=1, row=1, sticky=(W))
-videojuegos = ttk.Checkbutton(frame2, text='VIDEOJUEGOS')
-videojuegos.grid(column=2, row=1, sticky=(W))
-
-        
-comboEstados = ttk.Combobox(mainFrame, textvariable=estado)
-comboEstados.grid(column=1, row=1, pady=50)
-comboEstados['values']=('Aguascalientes','Baja California','Baja California Sur','Campeche',
+comboEstados = ttk. Combobox(sub_frame4, textvariable=estado)
+comboEstados.grid()
+comboEstados[ 'values'] = ('Aguascalientes','Baja California','Baja California Sur','Campeche',
 'Chiapas','Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato','Guerrero',
 'Hidalgo','Jalisco','México','Michoacán','Morelos','Nayarit','Nuevo León','Oaxaca','Puebla',
 'Querétaro','Quintana Roo','San Luis Potosí','Sinaloa','Sonora','Tabasco','Tamaulipas',
 'Tlaxcala','Veracruz','Yucatán','Zacatecas')
-        
-ttk.Button(mainFrame ,text="GUARDAR",).grid(column=0, row=5, pady=12, sticky=(W))
-ttk.Button(mainFrame, text="CANCELAR",).grid(column=0, row=5, pady=12, sticky=(N))
 
-estudiante = ttk.Radiobutton(frame3, text='ESTUDIANTE')
-estudiante.grid(column=0, row=0, sticky=(W))
-empleado = ttk.Radiobutton(frame3, text='EMPLEADO')
-empleado.grid(column=0, row=1, sticky=(W))
-desempleado = ttk.Radiobutton(frame3, text='DESEMPLEADO')
-desempleado.grid(column=0, row=2, sticky=(W))
+sub_frame5 = ttk.Frame(main_frame, width=200, height=300,padding="10 10 10 10")
+sub_frame5.grid(column=0,row=2)
 
-nombreEntry.focus()
+guardar_button = ttk.Button(sub_frame5, text="Guardar", command=guardar).grid(column = 0, row=0, padx= 12)
 
-raiz.mainloop()
+ttk.Button(sub_frame5, text="Cancelar").grid(column = 1, row=0,padx= 12)
+
+
+# Crear tabla para mostrar lista de personas
+table = ttk.Treeview(tab3, columns=("nombre", "a_paterno", "a_materno", "correo", "movil", "ocupacion", "aficionLeer", "aficionMusica", "aficionVideojuegos", "estado"))
+
+# Definir encabezados de columna
+table.heading("#0", text="ID")
+table.heading("nombre", text="Nombre")
+table.heading("a_paterno", text="Apellido paterno")
+table.heading("a_materno", text="Apellido materno")
+table.heading("correo", text="Correo")
+table.heading("movil", text="Móvil")
+table.heading("ocupacion", text="Ocupación")
+table.heading("aficionLeer", text="Lee")
+table.heading("aficionMusica", text="Escucha música")
+table.heading("aficionVideojuegos", text="Juega videojuegos")
+table.heading("estado", text="Estado")
+
+# Definir anchos de columna
+table.column("#0", width=50)
+table.column("nombre", width=100)
+table.column("a_paterno", width=120)
+table.column("a_materno", width=120)
+table.column("correo", width=200)
+table.column("movil", width=100)
+table.column("ocupacion", width=120)
+table.column("aficionLeer", width=100)
+table.column("aficionMusica", width=120)
+table.column("aficionVideojuegos", width=120)
+table.column("estado", width=120)
+ 
+
+
+# Ubicar tabla en la pestaña
+table.pack(fill=BOTH, expand=1)
+
+
+
+# Mostrar ventana
+root.mainloop()
